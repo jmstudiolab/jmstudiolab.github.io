@@ -1,0 +1,147 @@
+### Product Requirements Document (PRD): Random Student Number Selector Webpage
+
+#### Objective
+Create a simple webpage that allows a teacher to input a total number of students, display student numbers in a grid (5 per row), randomly select a number, and highlight the selected number.
+
+#### Scope
+- Single webpage using HTML, CSS, and JavaScript.
+- No external libraries or frameworks.
+- Responsive design for desktop and mobile.
+- Minimalist UI for ease of use in a classroom setting.
+
+#### Functional Requirements
+1. **Input Field**:
+   - A numeric input field to enter the total number of students (1 to 100).
+   - Input validation to ensure a positive integer.
+   - Default value: 30 (configurable).
+
+2. **Display Grid**:
+   - Display student numbers (1 to N, where N is the input number) in a grid.
+   - Grid layout: 5 numbers per row, centered on the page.
+   - Each number displayed in a box (e.g., square or circle) with clear borders.
+
+3. **Random Selection**:
+   - A "Select" button to randomly choose a student number.
+   - Highlight the selected number (e.g., change background color to yellow).
+   - Only one number highlighted at a time.
+   - Allow re-selection (new random number replaces previous highlight).
+
+4. **Reset Functionality**:
+   - A "Reset" button to clear the current selection and regenerate the grid based on the current input.
+
+#### Non-Functional Requirements
+- **Performance**: Page should load and respond within 1 second.
+- **Accessibility**: Ensure text is readable (min font size 16px, high contrast).
+- **Compatibility**: Works on modern browsers (Chrome, Firefox, Safari, Edge).
+- **Responsive Design**: Grid adjusts to screen size, maintaining 5 numbers per row on desktop and stacking on smaller screens if needed.
+
+#### User Interface
+- **Layout**:
+  - Top: Input field for total number and "Generate" button.
+  - Middle: Grid of student numbers (5 per row).
+  - Bottom: "Select" and "Reset" buttons.
+- **Styling**:
+  - Clean, professional look with a white background and dark text.
+  - Number boxes: Bordered, equal size, padding for readability.
+  - Highlighted number: Bright background (e.g., #FFFF99).
+  - Buttons: Clear, clickable, with hover effects (e.g., scale or color change).
+
+#### Technical Implementation
+- **HTML**:
+  - `<input type="number">` for total students.
+  - `<div>` container for the grid, with child `<div>`s for each number.
+  - `<button>` elements for Generate, Select, and Reset actions.
+- **CSS**:
+  - Use CSS Grid for the 5-per-row layout (`grid-template-columns: repeat(5, 1fr)`).
+  - Responsive breakpoints for mobile (e.g., stack to 2-3 per row if needed).
+  - Highlight class for selected number (e.g., `background-color: #FFFF99`).
+- **JavaScript**:
+  - Validate input (positive integer, max 100).
+  - Generate grid dynamically using `createElement` and append to DOM.
+  - Random selection using `Math.random()` to pick a number from 1 to N.
+  - Toggle highlight class on selected number, remove from previous.
+  - Reset function to clear selection and regenerate grid.
+
+#### Deliverables
+- Single `index.html` file with embedded CSS (`<style>`) and JavaScript (`<script>`).
+- No external dependencies.
+
+#### Acceptance Criteria
+1. User can input a number (1-100), click "Generate," and see a grid of numbers (5 per row).
+2. Clicking "Select" highlights a random number; subsequent clicks reselect a new number.
+3. Clicking "Reset" clears the highlight and regenerates the grid.
+4. Input validation prevents invalid entries (e.g., negative numbers, non-integers).
+5. Grid is responsive and readable on desktop and mobile.
+6. Highlighted number is visually distinct (e.g., yellow background).
+
+#### Example Code Structure
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Number Selector</title>
+  <style>
+    .container { text-align: center; padding: 20px; }
+    .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+    .number { border: 1px solid #333; padding: 10px; }
+    .highlight { background-color: #FFFF99; }
+    button { margin: 10px; padding: 10px 20px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <input type="number" id="total" min="1" max="100" value="30">
+    <button onclick="generateGrid()">Generate</button>
+    <div id="grid" class="grid"></div>
+    <button onclick="selectNumber()">Select</button>
+    <button onclick="resetGrid()">Reset</button>
+  </div>
+  <script>
+    function generateGrid() {
+      const total = parseInt(document.getElementById('total').value);
+      if (total < 1 || total > 100 || isNaN(total)) return alert('Enter a number between 1 and 100');
+      const grid = document.getElementById('grid');
+      grid.innerHTML = '';
+      for (let i = 1; i <= total; i++) {
+        const div = document.createElement('div');
+        div.className = 'number';
+        div.textContent = i;
+        grid.appendChild(div);
+      }
+    }
+    function selectNumber() {
+      const numbers = document.querySelectorAll('.number');
+      numbers.forEach(n => n.classList.remove('highlight'));
+      const randomIndex = Math.floor(Math.random() * numbers.length);
+      numbers[randomIndex].classList.add('highlight');
+    }
+    function resetGrid() {
+      generateGrid();
+    }
+    generateGrid(); // Initial load
+  </script>
+</body>
+</html>
+```
+
+#### Timeline
+- Development: 1-2 hours (simple implementation).
+- Testing: 1 hour (browser compatibility, input validation, responsiveness).
+
+#### Assumptions
+- Users are familiar with basic web interfaces.
+- No persistent storage needed (state resets on page refresh).
+- No authentication or user accounts required.
+
+#### Risks
+- Edge cases in input validation (e.g., non-numeric input).
+- Browser compatibility issues with CSS Grid on older browsers (mitigated by targeting modern browsers).
+
+#### Future Enhancements (Out of Scope)
+- Save selected numbers history.
+- Allow custom number ranges (e.g., skip certain numbers).
+- Add animation for highlight effect.
+
+This PRD ensures a focused, functional tool for classroom use with minimal complexity.
